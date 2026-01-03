@@ -12,6 +12,7 @@ import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import BackToTopButton from "@/components/BackToTopButton";
 import LoadingScreen from "@/components/LoadingScreen";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +43,7 @@ const Index = () => {
         <ContactSection />
         <Footer />
         <BackToTopButton />
+        <FloatingWhatsApp />
       </div>
     </>
   );
