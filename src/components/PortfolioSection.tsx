@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Github, Eye, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
@@ -24,6 +24,8 @@ const projects = [
     client: "Fashion House Co.",
     year: "2025",
     services: ["Web Design", "UI/UX", "E-commerce"],
+    liveUrl: "https://example.com/fashion-house",
+    githubUrl: "https://github.com/example/fashion-house",
   },
   {
     id: 2,
@@ -36,6 +38,8 @@ const projects = [
     client: "TechVision Inc.",
     year: "2025",
     services: ["Logo Design", "Brand Guidelines", "Visual Identity"],
+    liveUrl: "https://example.com/techvision",
+    githubUrl: null,
   },
   {
     id: 3,
@@ -48,6 +52,8 @@ const projects = [
     client: "Gourmet Kitchen",
     year: "2024",
     services: ["Menu Design", "Print Design", "Typography"],
+    liveUrl: null,
+    githubUrl: null,
   },
   {
     id: 4,
@@ -60,6 +66,8 @@ const projects = [
     client: "Studio Lens",
     year: "2024",
     services: ["Web Design", "Gallery System", "Performance Optimization"],
+    liveUrl: "https://example.com/studio-lens",
+    githubUrl: "https://github.com/example/studio-lens",
   },
   {
     id: 5,
@@ -72,6 +80,8 @@ const projects = [
     client: "Melody Fest",
     year: "2024",
     services: ["Poster Design", "Print Materials", "Event Branding"],
+    liveUrl: null,
+    githubUrl: null,
   },
   {
     id: 6,
@@ -84,6 +94,8 @@ const projects = [
     client: "HealthFirst",
     year: "2024",
     services: ["UI Design", "UX Research", "Mobile App Design"],
+    liveUrl: "https://example.com/healthfirst",
+    githubUrl: "https://github.com/example/healthfirst",
   },
   {
     id: 7,
@@ -96,6 +108,8 @@ const projects = [
     client: "Brew & Co.",
     year: "2023",
     services: ["Brand Identity", "Packaging", "Signage Design"],
+    liveUrl: "https://example.com/brew-co",
+    githubUrl: null,
   },
   {
     id: 8,
@@ -108,6 +122,8 @@ const projects = [
     client: "FinanceHub",
     year: "2023",
     services: ["Report Design", "Data Visualization", "Print Production"],
+    liveUrl: null,
+    githubUrl: null,
   },
 ];
 
@@ -137,7 +153,7 @@ const PortfolioSection = () => {
           transition={{ duration: 0.6 }}
         >
           <motion.span 
-            className="text-primary font-medium text-sm uppercase tracking-wider"
+            className="text-secondary font-medium text-sm uppercase tracking-wider"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ delay: 0.2 }}
@@ -145,7 +161,7 @@ const PortfolioSection = () => {
             Portfolio
           </motion.span>
           <motion.h2 
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mt-2 mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold text-foreground mt-2 mb-4"
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ delay: 0.3 }}
@@ -176,7 +192,11 @@ const PortfolioSection = () => {
             >
               <Button
                 variant={activeCategory === category ? "default" : "outline"}
-                className="rounded-full"
+                className={`rounded-full transition-all duration-300 ${
+                  activeCategory === category 
+                    ? "bg-primary text-primary-foreground shadow-teal" 
+                    : "hover:border-secondary hover:text-secondary"
+                }`}
                 onClick={() => setActiveCategory(category)}
               >
                 {category}
@@ -194,15 +214,19 @@ const PortfolioSection = () => {
               <motion.div 
                 key={project.id}
                 layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="group bg-card rounded-2xl overflow-hidden border border-border"
+                initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9, y: -30 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: index * 0.08,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                className="group bg-card rounded-2xl overflow-hidden border border-border shadow-premium hover:shadow-teal transition-all duration-500"
                 whileHover={{ 
-                  y: -10,
-                  boxShadow: "0 20px 40px -15px rgba(0,0,0,0.2)",
-                  borderColor: "hsl(var(--primary) / 0.5)"
+                  y: -12,
+                  borderColor: "hsl(var(--secondary))"
                 }}
               >
                 <div className="relative overflow-hidden aspect-[4/3]">
@@ -210,44 +234,78 @@ const PortfolioSection = () => {
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.5 }}
+                    whileHover={{ scale: 1.15 }}
+                    transition={{ duration: 0.6 }}
                   />
                   <motion.div 
-                    className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent flex items-end p-6"
+                    className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/60 to-transparent flex flex-col items-center justify-end p-6"
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   >
                     <motion.div
-                      initial={{ y: 20, opacity: 0 }}
+                      className="flex gap-3"
+                      initial={{ y: 30, opacity: 0 }}
                       whileHover={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 0.3 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
                     >
                       <Button 
                         size="sm" 
-                        className="rounded-full"
+                        className="rounded-full bg-card text-foreground hover:bg-secondary hover:text-secondary-foreground"
                         onClick={() => setSelectedProject(project)}
                       >
-                        View Project <ExternalLink className="ml-2 h-4 w-4" />
+                        <Eye className="mr-2 h-4 w-4" />
+                        View
                       </Button>
+                      {project.liveUrl && (
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          className="rounded-full border-card text-card hover:bg-card hover:text-foreground"
+                          onClick={() => window.open(project.liveUrl, '_blank')}
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {project.githubUrl && (
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          className="rounded-full border-card text-card hover:bg-card hover:text-foreground"
+                          onClick={() => window.open(project.githubUrl, '_blank')}
+                        >
+                          <Github className="h-4 w-4" />
+                        </Button>
+                      )}
                     </motion.div>
                   </motion.div>
                 </div>
                 
                 <div className="p-6">
-                  <span className="text-xs font-medium text-primary uppercase tracking-wider">
+                  <motion.span 
+                    className="inline-block text-xs font-medium text-secondary uppercase tracking-wider px-2 py-1 bg-secondary/10 rounded-full"
+                    whileHover={{ scale: 1.05 }}
+                  >
                     {project.category}
-                  </span>
-                  <h3 className="text-lg font-bold text-foreground mt-1 mb-2">
+                  </motion.span>
+                  <h3 className="text-lg font-display font-bold text-foreground mt-3 mb-2 group-hover:text-primary transition-colors duration-300">
                     {project.title}
                   </h3>
-                  <p className="text-muted-foreground text-sm mb-3">
+                  <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
                     {project.description}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    Client: {project.client}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground">
+                      {project.client} • {project.year}
+                    </p>
+                    <motion.button
+                      className="text-secondary text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all duration-300"
+                      onClick={() => setSelectedProject(project)}
+                      whileHover={{ x: 3 }}
+                    >
+                      Details <ArrowRight className="h-3 w-3" />
+                    </motion.button>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -257,18 +315,21 @@ const PortfolioSection = () => {
 
       {/* Project Detail Modal */}
       <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 border-secondary/20">
           {selectedProject && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.4, type: "spring" }}
             >
               <div className="relative aspect-video w-full overflow-hidden">
-                <img 
+                <motion.img 
                   src={selectedProject.fullImage}
                   alt={selectedProject.title}
                   className="w-full h-full object-cover"
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.6 }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
               </div>
@@ -276,23 +337,43 @@ const PortfolioSection = () => {
               <div className="p-6 lg:p-8">
                 <DialogHeader>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs font-medium text-primary uppercase tracking-wider px-2 py-1 bg-primary/10 rounded-full">
+                    <motion.span 
+                      className="text-xs font-medium text-secondary uppercase tracking-wider px-3 py-1 bg-secondary/10 rounded-full"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
                       {selectedProject.category}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
+                    </motion.span>
+                    <motion.span 
+                      className="text-xs text-muted-foreground"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                    >
                       {selectedProject.year}
-                    </span>
+                    </motion.span>
                   </div>
-                  <DialogTitle className="text-2xl lg:text-3xl font-bold text-foreground">
+                  <DialogTitle className="text-2xl lg:text-3xl font-display font-bold text-foreground">
                     {selectedProject.title}
                   </DialogTitle>
                 </DialogHeader>
                 
-                <p className="text-muted-foreground mt-4 leading-relaxed">
+                <motion.p 
+                  className="text-muted-foreground mt-4 leading-relaxed"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
                   {selectedProject.fullDescription}
-                </p>
+                </motion.p>
                 
-                <div className="grid sm:grid-cols-2 gap-6 mt-6">
+                <motion.div 
+                  className="grid sm:grid-cols-2 gap-6 mt-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
                   <div>
                     <h4 className="text-sm font-semibold text-foreground mb-2">Client</h4>
                     <p className="text-muted-foreground">{selectedProject.client}</p>
@@ -300,10 +381,13 @@ const PortfolioSection = () => {
                   <div>
                     <h4 className="text-sm font-semibold text-foreground mb-2">Services</h4>
                     <div className="flex flex-wrap gap-2">
-                      {selectedProject.services.map((service) => (
+                      {selectedProject.services.map((service, idx) => (
                         <motion.span 
                           key={service}
-                          className="text-xs px-2 py-1 bg-muted rounded-full text-muted-foreground"
+                          className="text-xs px-3 py-1 bg-muted rounded-full text-muted-foreground hover:bg-secondary/10 hover:text-secondary transition-colors duration-300"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 0.4 + idx * 0.05 }}
                           whileHover={{ scale: 1.05 }}
                         >
                           {service}
@@ -311,21 +395,51 @@ const PortfolioSection = () => {
                       ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
                 
-                <div className="mt-8 pt-6 border-t border-border">
+                <motion.div 
+                  className="mt-8 pt-6 border-t border-border flex flex-wrap gap-3"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  {selectedProject.liveUrl && (
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <Button 
+                        onClick={() => window.open(selectedProject.liveUrl!, '_blank')}
+                        className="rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+                      >
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        View Live Site
+                      </Button>
+                    </motion.div>
+                  )}
+                  {selectedProject.githubUrl && (
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <Button 
+                        variant="outline"
+                        onClick={() => window.open(selectedProject.githubUrl!, '_blank')}
+                        className="rounded-full hover:border-secondary hover:text-secondary"
+                      >
+                        <Github className="mr-2 h-4 w-4" />
+                        View Code
+                      </Button>
+                    </motion.div>
+                  )}
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button 
+                      variant="outline"
                       onClick={() => {
                         setSelectedProject(null);
                         document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
                       }}
-                      className="rounded-full"
+                      className="rounded-full hover:border-accent hover:text-accent hover:bg-accent/10"
                     >
                       Start a Similar Project
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </motion.div>
-                </div>
+                </motion.div>
               </div>
             </motion.div>
           )}
