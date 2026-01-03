@@ -49,15 +49,15 @@ const AboutSection = () => {
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <div className="aspect-[3/4] max-w-sm mx-auto lg:mx-0 relative">
+            <div className="w-72 h-72 sm:w-80 sm:h-80 mx-auto lg:mx-0 relative">
               <motion.div 
-                className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-3xl"
+                className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-full"
                 initial={{ rotate: 0 }}
                 animate={isInView ? { rotate: 6 } : { rotate: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               />
               <motion.div 
-                className="absolute inset-0 bg-card rounded-3xl shadow-xl overflow-hidden"
+                className="absolute inset-0 bg-card rounded-full shadow-xl overflow-hidden"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
