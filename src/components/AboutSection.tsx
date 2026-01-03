@@ -1,5 +1,6 @@
 import { Code, Palette, Layout, Sparkles } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import profileImage from "@/assets/dinasiri-profile.jpg";
 
 const skills = [
   { icon: Layout, name: "Web Design", description: "Creating beautiful, responsive websites" },
@@ -22,13 +23,13 @@ const AboutSection = () => {
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="relative">
-            <div className="aspect-square max-w-md mx-auto lg:mx-0 relative">
+            <div className="aspect-[3/4] max-w-sm mx-auto lg:mx-0 relative">
               <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-3xl transform rotate-6" />
               <div className="absolute inset-0 bg-card rounded-3xl shadow-xl overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=500&fit=crop&crop=face"
-                  alt="Dinasiri Osman"
-                  className="w-full h-full object-cover"
+                  src={profileImage}
+                  alt="Dinasiri Osman - Web & Graphic Designer"
+                  className="w-full h-full object-cover object-top"
                 />
               </div>
             </div>
