@@ -1,4 +1,5 @@
 import { Code, Palette, Layout, Sparkles } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const skills = [
   { icon: Layout, name: "Web Design", description: "Creating beautiful, responsive websites" },
@@ -8,8 +9,16 @@ const skills = [
 ];
 
 const AboutSection = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+
   return (
-    <section id="about" className="py-20 lg:py-32 bg-muted/30 px-4 sm:px-6 lg:px-8">
+    <section 
+      id="about" 
+      ref={ref}
+      className={`py-20 lg:py-32 bg-muted/30 px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="relative">

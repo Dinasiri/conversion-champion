@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const categories = ["All", "Web Design", "Graphic Design", "Branding"];
 
@@ -73,13 +74,20 @@ const projects = [
 
 const PortfolioSection = () => {
   const [activeCategory, setActiveCategory] = useState("All");
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
   
   const filteredProjects = activeCategory === "All" 
     ? projects 
     : projects.filter(p => p.category === activeCategory);
 
   return (
-    <section id="portfolio" className="py-20 lg:py-32 bg-muted/30 px-4 sm:px-6 lg:px-8">
+    <section 
+      id="portfolio" 
+      ref={ref}
+      className={`py-20 lg:py-32 bg-muted/30 px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <span className="text-primary font-medium text-sm uppercase tracking-wider">Portfolio</span>

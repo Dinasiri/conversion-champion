@@ -1,12 +1,20 @@
 import { Mail, Phone, Instagram, Linkedin, ArrowUp } from "lucide-react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Footer = () => {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer className="bg-card border-t border-border py-12 px-4 sm:px-6 lg:px-8">
+    <footer 
+      ref={ref}
+      className={`bg-card border-t border-border py-12 px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div className="sm:col-span-2">
