@@ -1,4 +1,4 @@
-import { Mail, Phone, Instagram, Linkedin, ArrowUp } from "lucide-react";
+import { Mail, Phone, Instagram, Linkedin, ArrowUp, MessageCircle } from "lucide-react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Footer = () => {
@@ -88,6 +88,17 @@ const Footer = () => {
                 >
                   <Phone className="h-4 w-4" />
                   <span className="text-sm">+254 724 465 463</span>
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://wa.me/254724465463"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-green-500 transition-colors"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <span className="text-sm">WhatsApp</span>
                 </a>
               </li>
             </ul>
