@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", "system-ui", "sans-serif"],
-        display: ["Sora", "system-ui", "sans-serif"],
+        sans: ["Open Sans", "system-ui", "sans-serif"],
+        display: ["Montserrat", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -61,10 +61,11 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "deep-blue": "hsl(var(--deep-blue))",
+        teal: "hsl(var(--teal))",
         gold: "hsl(var(--gold))",
-        "gold-light": "hsl(var(--gold-light))",
-        obsidian: "hsl(var(--obsidian))",
-        platinum: "hsl(var(--platinum))",
+        "light-gray": "hsl(var(--light-gray))",
+        "dark-text": "hsl(var(--dark-text))",
       },
       borderRadius: {
         lg: "var(--radius)",
