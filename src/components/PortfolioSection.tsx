@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExternalLink, Github, Eye, ArrowRight } from "lucide-react";
+import { ExternalLink, Github, Eye, ArrowRight, X, ZoomIn, ZoomOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
@@ -132,6 +132,8 @@ type Project = typeof projects[0];
 const PortfolioSection = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [lightboxImage, setLightboxImage] = useState<{ url: string; title: string } | null>(null);
+  const [isZoomed, setIsZoomed] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   
@@ -268,10 +270,10 @@ const PortfolioSection = () => {
                           className="rounded-full border-card text-card hover:bg-card hover:text-foreground"
                           onClick={(e) => {
                             e.stopPropagation();
-                            window.open(project.liveUrl, '_blank');
+                            setLightboxImage({ url: project.fullImage, title: project.title });
                           }}
                         >
-                          <ExternalLink className="h-4 w-4" />
+                          <Eye className="h-4 w-4" />
                         </Button>
                       )}
                       {project.githubUrl && (
@@ -419,11 +421,11 @@ const PortfolioSection = () => {
                   {selectedProject.liveUrl && (
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                       <Button 
-                        onClick={() => window.open(selectedProject.liveUrl!, '_blank')}
+                        onClick={() => setLightboxImage({ url: selectedProject.fullImage, title: selectedProject.title })}
                         className="rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
                       >
-                        <ExternalLink className="mr-2 h-4 w-4" />
-                        View Live Site
+                        <Eye className="mr-2 h-4 w-4" />
+                        View Live Preview
                       </Button>
                     </motion.div>
                   )}
@@ -458,6 +460,92 @@ const PortfolioSection = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Image Lightbox */}
+      <AnimatePresence>
+        {lightboxImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 backdrop-blur-md"
+            onClick={() => {
+              setLightboxImage(null);
+              setIsZoomed(false);
+            }}
+          >
+            {/* Controls */}
+            <div className="absolute top-4 right-4 flex gap-2 z-10">
+              <motion.button
+                className="p-3 bg-card/80 rounded-full text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsZoomed(!isZoomed);
+                }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                {isZoomed ? <ZoomOut className="h-5 w-5" /> : <ZoomIn className="h-5 w-5" />}
+              </motion.button>
+              <motion.button
+                className="p-3 bg-card/80 rounded-full text-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                onClick={() => {
+                  setLightboxImage(null);
+                  setIsZoomed(false);
+                }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <X className="h-5 w-5" />
+              </motion.button>
+            </div>
+
+            {/* Title */}
+            <motion.div
+              className="absolute top-4 left-4 z-10"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <h3 className="text-xl font-bold text-foreground bg-card/80 px-4 py-2 rounded-full">
+                {lightboxImage.title}
+              </h3>
+            </motion.div>
+
+            {/* Image */}
+            <motion.div
+              className={`relative ${isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'} max-w-[90vw] max-h-[85vh]`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsZoomed(!isZoomed);
+              }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25 }}
+            >
+              <motion.img
+                src={lightboxImage.url}
+                alt={lightboxImage.title}
+                className="rounded-2xl shadow-2xl object-contain max-h-[85vh]"
+                animate={{ scale: isZoomed ? 1.5 : 1 }}
+                transition={{ type: "spring", damping: 20 }}
+                style={{ transformOrigin: "center center" }}
+              />
+            </motion.div>
+
+            {/* Hint */}
+            <motion.p
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 text-muted-foreground text-sm bg-card/80 px-4 py-2 rounded-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              Click image to {isZoomed ? 'zoom out' : 'zoom in'} • Click outside or × to close
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
