@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Mail, Phone, MapPin, Send, Instagram, Linkedin } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Instagram, Linkedin, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -172,6 +172,32 @@ const ContactSection = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Phone</p>
                   <p className="font-medium text-foreground">+254 724 465 463</p>
+                </div>
+              </motion.a>
+              
+              <motion.a 
+                href="https://wa.me/254724465463"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 p-4 bg-card rounded-xl border border-border transition-colors group"
+                variants={itemVariants}
+                whileHover={{ 
+                  scale: 1.02,
+                  boxShadow: "0 10px 30px -10px rgba(0,0,0,0.2)",
+                  borderColor: "hsl(var(--primary) / 0.5)"
+                }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <motion.div 
+                  className="p-3 bg-green-500/10 rounded-lg group-hover:bg-green-500/20 transition-colors"
+                  whileHover={{ rotate: 360 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <MessageCircle className="h-5 w-5 text-green-500" />
+                </motion.div>
+                <div>
+                  <p className="text-sm text-muted-foreground">WhatsApp</p>
+                  <p className="font-medium text-foreground">Chat with me</p>
                 </div>
               </motion.a>
               
