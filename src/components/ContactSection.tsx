@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const ContactSection = () => {
   const { toast } = useToast();
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,7 +38,13 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-20 lg:py-32 bg-muted/30 px-4 sm:px-6 lg:px-8">
+    <section 
+      id="contact" 
+      ref={ref}
+      className={`py-20 lg:py-32 bg-muted/30 px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+      }`}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
           <span className="text-primary font-medium text-sm uppercase tracking-wider">Get In Touch</span>
