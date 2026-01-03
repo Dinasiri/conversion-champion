@@ -223,11 +223,12 @@ const PortfolioSection = () => {
                   type: "spring",
                   stiffness: 100
                 }}
-                className="group bg-card rounded-2xl overflow-hidden border border-border shadow-premium hover:shadow-teal transition-all duration-500"
+                className="group bg-card rounded-2xl overflow-hidden border border-border shadow-premium hover:shadow-teal transition-all duration-500 cursor-pointer"
                 whileHover={{ 
                   y: -12,
                   borderColor: "hsl(var(--secondary))"
                 }}
+                onClick={() => setSelectedProject(project)}
               >
                 <div className="relative overflow-hidden aspect-[4/3]">
                   <motion.img 
@@ -252,7 +253,10 @@ const PortfolioSection = () => {
                       <Button 
                         size="sm" 
                         className="rounded-full bg-card text-foreground hover:bg-secondary hover:text-secondary-foreground"
-                        onClick={() => setSelectedProject(project)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedProject(project);
+                        }}
                       >
                         <Eye className="mr-2 h-4 w-4" />
                         View
@@ -262,7 +266,10 @@ const PortfolioSection = () => {
                           size="sm" 
                           variant="outline"
                           className="rounded-full border-card text-card hover:bg-card hover:text-foreground"
-                          onClick={() => window.open(project.liveUrl, '_blank')}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(project.liveUrl, '_blank');
+                          }}
                         >
                           <ExternalLink className="h-4 w-4" />
                         </Button>
@@ -272,7 +279,10 @@ const PortfolioSection = () => {
                           size="sm" 
                           variant="outline"
                           className="rounded-full border-card text-card hover:bg-card hover:text-foreground"
-                          onClick={() => window.open(project.githubUrl, '_blank')}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(project.githubUrl, '_blank');
+                          }}
                         >
                           <Github className="h-4 w-4" />
                         </Button>
@@ -300,7 +310,10 @@ const PortfolioSection = () => {
                     </p>
                     <motion.button
                       className="text-secondary text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all duration-300"
-                      onClick={() => setSelectedProject(project)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedProject(project);
+                      }}
                       whileHover={{ x: 3 }}
                     >
                       Details <ArrowRight className="h-3 w-3" />
