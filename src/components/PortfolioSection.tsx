@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ExternalLink, X } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -115,7 +116,8 @@ type Project = typeof projects[0];
 const PortfolioSection = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
   
   const filteredProjects = activeCategory === "All" 
     ? projects 
@@ -125,81 +127,143 @@ const PortfolioSection = () => {
     <section 
       id="portfolio" 
       ref={ref}
-      className={`py-20 lg:py-32 bg-muted/30 px-4 sm:px-6 lg:px-8 transition-all duration-700 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-      }`}
+      className="py-20 lg:py-32 bg-muted/30 px-4 sm:px-6 lg:px-8"
     >
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <span className="text-primary font-medium text-sm uppercase tracking-wider">Portfolio</span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mt-2 mb-4">
+        <motion.div 
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.span 
+            className="text-primary font-medium text-sm uppercase tracking-wider"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            Portfolio
+          </motion.span>
+          <motion.h2 
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mt-2 mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ delay: 0.3 }}
+          >
             Featured Projects
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          </motion.h2>
+          <motion.p 
+            className="text-muted-foreground text-lg max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ delay: 0.4 }}
+          >
             A selection of my best work across web design, graphic design, and branding.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
         
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
+        <motion.div 
+          className="flex flex-wrap justify-center gap-2 mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ delay: 0.5 }}
+        >
           {categories.map((category) => (
-            <Button
+            <motion.div
               key={category}
-              variant={activeCategory === category ? "default" : "outline"}
-              className="rounded-full"
-              onClick={() => setActiveCategory(category)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              {category}
-            </Button>
+              <Button
+                variant={activeCategory === category ? "default" : "outline"}
+                className="rounded-full"
+                onClick={() => setActiveCategory(category)}
+              >
+                {category}
+              </Button>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
         
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project) => (
-            <div 
-              key={project.id}
-              className="group bg-card rounded-2xl overflow-hidden border border-border hover:border-primary/50 hover:shadow-xl transition-all duration-300"
-            >
-              <div className="relative overflow-hidden aspect-[4/3]">
-                <img 
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                  <Button 
-                    size="sm" 
-                    className="rounded-full"
-                    onClick={() => setSelectedProject(project)}
+        <motion.div 
+          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+          layout
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredProjects.map((project, index) => (
+              <motion.div 
+                key={project.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="group bg-card rounded-2xl overflow-hidden border border-border"
+                whileHover={{ 
+                  y: -10,
+                  boxShadow: "0 20px 40px -15px rgba(0,0,0,0.2)",
+                  borderColor: "hsl(var(--primary) / 0.5)"
+                }}
+              >
+                <div className="relative overflow-hidden aspect-[4/3]">
+                  <motion.img 
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.5 }}
+                  />
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent flex items-end p-6"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    View Project <ExternalLink className="ml-2 h-4 w-4" />
-                  </Button>
+                    <motion.div
+                      initial={{ y: 20, opacity: 0 }}
+                      whileHover={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Button 
+                        size="sm" 
+                        className="rounded-full"
+                        onClick={() => setSelectedProject(project)}
+                      >
+                        View Project <ExternalLink className="ml-2 h-4 w-4" />
+                      </Button>
+                    </motion.div>
+                  </motion.div>
                 </div>
-              </div>
-              
-              <div className="p-6">
-                <span className="text-xs font-medium text-primary uppercase tracking-wider">
-                  {project.category}
-                </span>
-                <h3 className="text-lg font-bold text-foreground mt-1 mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-muted-foreground text-sm mb-3">
-                  {project.description}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Client: {project.client}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+                
+                <div className="p-6">
+                  <span className="text-xs font-medium text-primary uppercase tracking-wider">
+                    {project.category}
+                  </span>
+                  <h3 className="text-lg font-bold text-foreground mt-1 mb-2">
+                    {project.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-3">
+                    {project.description}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Client: {project.client}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
 
       {/* Project Detail Modal */}
       <Dialog open={!!selectedProject} onOpenChange={() => setSelectedProject(null)}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
           {selectedProject && (
-            <>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
               <div className="relative aspect-video w-full overflow-hidden">
                 <img 
                   src={selectedProject.fullImage}
@@ -237,30 +301,33 @@ const PortfolioSection = () => {
                     <h4 className="text-sm font-semibold text-foreground mb-2">Services</h4>
                     <div className="flex flex-wrap gap-2">
                       {selectedProject.services.map((service) => (
-                        <span 
+                        <motion.span 
                           key={service}
                           className="text-xs px-2 py-1 bg-muted rounded-full text-muted-foreground"
+                          whileHover={{ scale: 1.05 }}
                         >
                           {service}
-                        </span>
+                        </motion.span>
                       ))}
                     </div>
                   </div>
                 </div>
                 
                 <div className="mt-8 pt-6 border-t border-border">
-                  <Button 
-                    onClick={() => {
-                      setSelectedProject(null);
-                      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="rounded-full"
-                  >
-                    Start a Similar Project
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button 
+                      onClick={() => {
+                        setSelectedProject(null);
+                        document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+                      }}
+                      className="rounded-full"
+                    >
+                      Start a Similar Project
+                    </Button>
+                  </motion.div>
                 </div>
               </div>
-            </>
+            </motion.div>
           )}
         </DialogContent>
       </Dialog>
