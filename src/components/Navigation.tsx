@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTheme } from "next-themes";
 
 const navLinks = [
   { name: "About", href: "#about" },
@@ -13,6 +14,12 @@ const navLinks = [
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +32,10 @@ const Navigation = () => {
   const handleNavClick = (href: string) => {
     setIsOpen(false);
     document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
@@ -47,20 +58,36 @@ const Navigation = () => {
                 {link.name}
               </button>
             ))}
+            <button
+              onClick={toggleTheme}
+              className="p-2 ml-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted"
+              aria-label="Toggle theme"
+            >
+              {mounted && (theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />)}
+            </button>
             <Button 
-              className="ml-4 rounded-full"
+              className="ml-2 rounded-full"
               onClick={() => handleNavClick("#contact")}
             >
               Hire Me
             </Button>
           </div>
           
-          <button 
-            className="md:hidden p-2 text-foreground"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-foreground"
+              aria-label="Toggle theme"
+            >
+              {mounted && (theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />)}
+            </button>
+            <button 
+              className="p-2 text-foreground"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
       </div>
       
