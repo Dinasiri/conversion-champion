@@ -1,5 +1,5 @@
-import { Star, Quote, Play } from "lucide-react";
-import { motion, useInView } from "framer-motion";
+import { Star, Quote, Play, X } from "lucide-react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import {
   Carousel,
@@ -8,12 +8,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 const testimonials = [
   {
@@ -23,8 +17,6 @@ const testimonials = [
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face",
     content: "Dinasiri transformed our vision into a stunning website that exceeded all expectations. The attention to detail and creative approach made all the difference.",
     rating: 5,
-    hasVideo: true,
-    videoThumbnail: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=300&fit=crop&crop=face",
   },
   {
     id: 2,
@@ -33,7 +25,6 @@ const testimonials = [
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
     content: "Working with Dinasiri was a fantastic experience. The branding package perfectly captured our coffee shop's essence and helped us stand out in a competitive market.",
     rating: 5,
-    hasVideo: false,
   },
   {
     id: 3,
@@ -42,8 +33,6 @@ const testimonials = [
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
     content: "The e-commerce website Dinasiri designed has significantly improved our online presence. Clean, modern, and incredibly user-friendly. Highly recommended!",
     rating: 5,
-    hasVideo: true,
-    videoThumbnail: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=300&fit=crop&crop=face",
   },
   {
     id: 4,
@@ -52,7 +41,6 @@ const testimonials = [
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     content: "Fast, reliable, and talented. Dinasiri delivered our complete brand identity on time and exceeded our expectations. The logo design is exactly what we envisioned.",
     rating: 5,
-    hasVideo: false,
   },
   {
     id: 5,
@@ -61,15 +49,40 @@ const testimonials = [
     image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
     content: "Excellent graphic design services! Very creative and professional. Dinasiri understood our vision from day one and translated it beautifully into our website.",
     rating: 5,
-    hasVideo: true,
-    videoThumbnail: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=300&fit=crop&crop=face",
+  },
+];
+
+const videoTestimonials = [
+  {
+    id: 1,
+    name: "Creative Studio Review",
+    role: "Brand Identity Project",
+    thumbnail: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop",
+    videoId: "dQw4w9WgXcQ", // Replace with actual testimonial video IDs
+    description: "How our brand identity was transformed",
+  },
+  {
+    id: 2,
+    name: "E-commerce Success",
+    role: "Website Design Project",
+    thumbnail: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
+    videoId: "jNQXAC9IVRw",
+    description: "Our online store redesign journey",
+  },
+  {
+    id: 3,
+    name: "Startup Branding",
+    role: "Complete Branding Package",
+    thumbnail: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=400&h=300&fit=crop",
+    videoId: "FTQbiNvZqaY",
+    description: "From idea to iconic brand",
   },
 ];
 
 const TestimonialsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [selectedVideo, setSelectedVideo] = useState<typeof testimonials[0] | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<typeof videoTestimonials[0] | null>(null);
 
   return (
     <section
@@ -112,61 +125,72 @@ const TestimonialsSection = () => {
 
         {/* Video Testimonials Row */}
         <motion.div 
-          className="mb-12"
+          className="mb-16"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           transition={{ delay: 0.5, duration: 0.6 }}
         >
-          <h3 className="text-lg font-semibold text-foreground mb-6 text-center">
+          <h3 className="text-xl font-semibold text-foreground mb-8 text-center flex items-center justify-center gap-2">
+            <Play className="h-5 w-5 text-primary" />
             Video Testimonials
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            {testimonials
-              .filter((t) => t.hasVideo)
-              .map((testimonial, index) => (
-                <motion.div
-                  key={testimonial.id}
-                  className="relative group cursor-pointer rounded-2xl overflow-hidden"
-                  onClick={() => setSelectedVideo(testimonial)}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-                  transition={{ delay: 0.6 + (index * 0.1), duration: 0.5 }}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                >
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {videoTestimonials.map((video, index) => (
+              <motion.div
+                key={video.id}
+                className="relative group cursor-pointer rounded-2xl overflow-hidden shadow-premium hover:shadow-teal transition-shadow duration-300"
+                onClick={() => setSelectedVideo(video)}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+                transition={{ delay: 0.6 + (index * 0.1), duration: 0.5 }}
+                whileHover={{ scale: 1.02, y: -5 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="relative aspect-video overflow-hidden">
                   <motion.img
-                    src={testimonial.videoThumbnail}
-                    alt={`${testimonial.name} video testimonial`}
-                    className="w-full h-48 object-cover"
+                    src={video.thumbnail}
+                    alt={`${video.name} video testimonial`}
+                    className="w-full h-full object-cover"
                     whileHover={{ scale: 1.1 }}
                     transition={{ duration: 0.5 }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+                  
+                  {/* Play Button */}
                   <motion.div 
                     className="absolute inset-0 flex items-center justify-center"
-                    whileHover={{ scale: 1.1 }}
                   >
                     <motion.div 
-                      className="w-14 h-14 rounded-full bg-primary/90 flex items-center justify-center shadow-lg"
+                      className="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center shadow-teal"
                       whileHover={{ scale: 1.2 }}
                       animate={{ 
-                        boxShadow: ["0 0 0 0 rgba(var(--primary), 0.4)", "0 0 0 20px rgba(var(--primary), 0)", "0 0 0 0 rgba(var(--primary), 0.4)"]
+                        boxShadow: [
+                          "0 0 0 0 rgba(26, 188, 156, 0.4)", 
+                          "0 0 0 20px rgba(26, 188, 156, 0)", 
+                          "0 0 0 0 rgba(26, 188, 156, 0.4)"
+                        ]
                       }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
-                      <Play className="h-6 w-6 text-primary-foreground ml-1" />
+                      <Play className="h-7 w-7 text-primary-foreground ml-1" fill="currentColor" />
                     </motion.div>
                   </motion.div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <p className="text-foreground font-medium text-sm">
-                      {testimonial.name}
-                    </p>
-                    <p className="text-muted-foreground text-xs">
-                      {testimonial.role}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+                </div>
+                
+                {/* Video Info */}
+                <div className="p-4 bg-card">
+                  <h4 className="text-foreground font-semibold text-lg mb-1">
+                    {video.name}
+                  </h4>
+                  <p className="text-primary text-sm font-medium mb-2">
+                    {video.role}
+                  </p>
+                  <p className="text-muted-foreground text-sm">
+                    {video.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </motion.div>
 
@@ -184,7 +208,7 @@ const TestimonialsSection = () => {
             className="w-full"
           >
             <CarouselContent className="-ml-4">
-              {testimonials.map((testimonial, index) => (
+              {testimonials.map((testimonial) => (
                 <CarouselItem
                   key={testimonial.id}
                   className="pl-4 md:basis-1/2 lg:basis-1/3"
@@ -207,7 +231,7 @@ const TestimonialsSection = () => {
                           animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
                           transition={{ delay: 1 + (i * 0.1) }}
                         >
-                          <Star className="h-4 w-4 fill-primary text-primary" />
+                          <Star className="h-4 w-4 fill-accent text-accent" />
                         </motion.div>
                       ))}
                     </div>
@@ -243,38 +267,60 @@ const TestimonialsSection = () => {
       </div>
 
       {/* Video Modal */}
-      <Dialog open={!!selectedVideo} onOpenChange={() => setSelectedVideo(null)}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-3">
-              <img
-                src={selectedVideo?.image}
-                alt={selectedVideo?.name}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-              <div>
-                <span className="block">{selectedVideo?.name}</span>
-                <span className="text-sm font-normal text-muted-foreground">
-                  {selectedVideo?.role}
-                </span>
+      <AnimatePresence>
+        {selectedVideo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm"
+            onClick={() => setSelectedVideo(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 25 }}
+              className="relative w-full max-w-4xl bg-card rounded-2xl overflow-hidden shadow-teal"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <motion.button
+                className="absolute top-4 right-4 z-10 p-2 bg-background/80 rounded-full text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                onClick={() => setSelectedVideo(null)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <X className="h-5 w-5" />
+              </motion.button>
+
+              {/* Video Player */}
+              <div className="aspect-video">
+                <iframe
+                  src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1&rel=0`}
+                  title={selectedVideo.name}
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               </div>
-            </DialogTitle>
-          </DialogHeader>
-          <div className="aspect-video bg-secondary rounded-lg flex items-center justify-center">
-            <div className="text-center p-8">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <Play className="h-8 w-8 text-primary" />
+
+              {/* Video Info */}
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-foreground mb-1">
+                  {selectedVideo.name}
+                </h3>
+                <p className="text-primary font-medium mb-2">
+                  {selectedVideo.role}
+                </p>
+                <p className="text-muted-foreground">
+                  {selectedVideo.description}
+                </p>
               </div>
-              <p className="text-muted-foreground">
-                Video testimonial coming soon
-              </p>
-              <p className="text-sm text-muted-foreground mt-2">
-                "{selectedVideo?.content}"
-              </p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
